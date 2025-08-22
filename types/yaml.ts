@@ -8,7 +8,7 @@ export interface YamlConfigPanelProps {
 export interface ConfigField {
     key: string
     label: string
-    type: "string" | "number" | "boolean" | "select" | "multiselect"
+    type: "string" | "number" | "boolean" | "select" | "multiselect" | "timerange"
     options?: string[]
     value: any
 }

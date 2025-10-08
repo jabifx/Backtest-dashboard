@@ -11,7 +11,7 @@ export const baseConfigDefault: BaseConfig = {
     VELAS: 600,
     SPREAD: 0.0001,
     COMISSION: 2,
-    SYMBOL: "EURUSD",
+    SYMBOL: [],
 };
 
 export const parseYamlToFields = async (yamlString: string, config: BaseConfig): Promise<ConfigField[]> => {

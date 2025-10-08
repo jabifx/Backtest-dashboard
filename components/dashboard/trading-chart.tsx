@@ -19,11 +19,9 @@ interface Signal {
 interface TradingChartProps {
   data: ChartData[]
   type?: "candlestick" | "line"
-  entries?: Signal[]
-  exits?: Signal[]
 }
 
-export function TradingChart({ data, type = "candlestick", entries = [], exits = [] }: TradingChartProps) {
+export function TradingChart({ data, type = "candlestick" }: TradingChartProps) {
   const chartContainerRef = useRef<HTMLDivElement>(null)
   const chartRef = useRef<any>(null)
   const seriesRef = useRef<any>(null)
@@ -44,11 +42,6 @@ export function TradingChart({ data, type = "candlestick", entries = [], exits =
       // Validar y convertir timestamps
       const validateAndConvertTime = (signal: Signal) => {
         let time = signal.time
-
-        // Si es string, convertir a timestamp
-        if (typeof time === "string") {
-          time = Math.floor(new Date(time).getTime() / 1000)
-        }
 
         // Si es timestamp en milisegundos, convertir a segundos
         if (time > 1e10) {
@@ -200,7 +193,6 @@ export function TradingChart({ data, type = "candlestick", entries = [], exits =
             if (chartRef.current) {
               chartRef.current.timeScale().scrollToRealTime()
             }
-            setTradeMarkers(entries, exits)
           }, 100)
         }
       } else {
@@ -215,22 +207,14 @@ export function TradingChart({ data, type = "candlestick", entries = [], exits =
             if (chartRef.current) {
               chartRef.current.timeScale().scrollToRealTime()
             }
-            setTradeMarkers(entries, exits)
           }, 100)
         }
       }
     } catch (error) {
       console.error("Error updating chart:", error)
     }
-  }, [data, type, entries, exits])
+  }, [data, type])
 
-  useEffect(() => {
-    if (seriesRef.current && (entries.length > 0 || exits.length > 0)) {
-      setTimeout(() => {
-        setTradeMarkers(entries, exits)
-      }, 50)
-    }
-  }, [entries, exits])
 
   return (
       <div>

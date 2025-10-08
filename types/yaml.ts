@@ -21,5 +21,5 @@ export interface BaseConfig {
     VELAS: number;
     SPREAD: number;
     COMISSION: number;
-    SYMBOL: string;
+    SYMBOL: string[];
 }

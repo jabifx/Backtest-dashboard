@@ -20,7 +20,11 @@ export function ElectronTitlebar({ backtestStatus = "idle" }: ElectronTitlebarPr
     const checkElectron = () => {
       const hasElectronAPI = typeof window !== "undefined" && window.electronAPI !== undefined
       setIsElectron(hasElectronAPI)
-      if (hasElectronAPI && window.electronAPI) window.electronAPI.isMaximized().then(setIsMaximized)
+      if (window.electronAPI) {
+        window.electronAPI.isMaximized().then(result => {
+          if (result.success) setIsMaximized(result.isMaximized)
+        })
+      }
     }
     checkElectron()
   }, [])

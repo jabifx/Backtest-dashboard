@@ -1,18 +1,23 @@
 interface ElectronAPI {
-  minimizeWindow: () => Promise<{ success: boolean; error?: string }>
-  maximizeWindow: () => Promise<{ success: boolean; isMaximized?: boolean; error?: string }>
-  closeWindow: () => Promise<{ success: boolean; error?: string }>
-  isMaximized: () => Promise<{ success: boolean; isMaximized: boolean; error?: string }>
+  minimizeWindow: () => Promise<{ success: boolean; error?: string }>;
+  maximizeWindow: () => Promise<{ success: boolean; isMaximized?: boolean; error?: string }>;
+  closeWindow: () => Promise<{ success: boolean; error?: string }>;
+  isMaximized: () => Promise<{ success: boolean; isMaximized: boolean; error?: string }>;
   getAppInfo: () => Promise<{
-    success: boolean
-    version?: string
-    name?: string
-    isDev?: boolean
-    error?: string
-  }>
-  platform: string
-  isDevelopment: boolean
-  openExternal: (url: string) => boolean
+    success: boolean;
+    version?: string;
+    name?: string;
+    isDev?: boolean;
+    error?: string;
+  }>;
+  platform: string;
+  isDevelopment: boolean;
+  openExternal: (url: string) => boolean;
+
+  getApiUrl: () => Promise<{ success: boolean; apiUrl: string }>;
+  setApiUrl: (url: string) => Promise<{ success: boolean; error?: string }>;
+  closeConfigWindow: () => Promise<void>;
+  openConfigWindow(): any;
 }
 
 interface ElectronDev {
@@ -28,7 +33,7 @@ interface ElectronDev {
 
 declare global {
   interface Window {
-    electronAPI: ElectronAPI
+    electronAPI?: ElectronAPI;
     electronDev?: ElectronDev
   }
 }

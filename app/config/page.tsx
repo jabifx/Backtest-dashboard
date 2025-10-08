@@ -5,9 +5,10 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Save, RotateCcw, X } from "lucide-react"
+import { setApiUrl as setGlobalApiUrl } from "@/lib/config"
 
 export default function ConfigPage() {
-    const [apiUrl, setApiUrl] = useState("http://localhost:8000")
+    const [apiUrl, setApiUrlState] = useState("http://localhost:8000")
     const [isLoading, setIsLoading] = useState(true)
     const [isSaving, setIsSaving] = useState(false)
 
@@ -17,12 +18,16 @@ export default function ConfigPage() {
 
     const loadApiUrl = async () => {
         try {
+            let url = "http://localhost:8000"
+
             if (window.electronAPI) {
                 const result = await window.electronAPI.getApiUrl()
                 if (result.success) {
-                    setApiUrl(result.apiUrl)
+                    url = result.apiUrl
                 }
             }
+
+            setApiUrlState(url) // actualizamos estado local
         } catch (error) {
             console.error("Error loading API URL:", error)
         } finally {
@@ -33,11 +38,17 @@ export default function ConfigPage() {
     const handleSave = async () => {
         setIsSaving(true)
         try {
+            // guardamos en módulo global
+            setGlobalApiUrl(apiUrl)
+
+            // guardamos en Electron si existe
             if (window.electronAPI) {
                 const result = await window.electronAPI.setApiUrl(apiUrl)
                 if (result.success) {
                     await window.electronAPI.closeConfigWindow()
                 }
+            } else {
+                console.log("API URL guardada localmente:", apiUrl)
             }
         } catch (error) {
             console.error("Error saving API URL:", error)
@@ -47,7 +58,7 @@ export default function ConfigPage() {
     }
 
     const handleReset = () => {
-        setApiUrl("http://localhost:8000")
+        setApiUrlState("http://localhost:8000")
     }
 
     const handleClose = async () => {
@@ -92,7 +103,7 @@ export default function ConfigPage() {
                                 id="api-url"
                                 type="url"
                                 value={apiUrl}
-                                onChange={(e) => setApiUrl(e.target.value)}
+                                onChange={(e) => setApiUrlState(e.target.value)}
                                 placeholder="http://localhost:8000"
                                 className="w-full"
                             />
